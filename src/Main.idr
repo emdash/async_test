@@ -27,10 +27,9 @@ countSeconds (S k) chan = do
 covering
 stdin : Has Errno es => Channel String -> Async Poll es ()
 stdin chan = do
-  use1 rawMode $ \_ => do
-    bytes <- readnb Stdin ByteString 16
-    _ <- send chan $ show bytes
-    stdin chan
+  bytes <- readnb Stdin ByteString 16
+  _ <- send chan $ show bytes
+  stdin chan
 
 covering
 mainloop : Channel String -> Async Poll es ()
@@ -44,10 +43,10 @@ main : IO ()
 main = epollApp $ handle [\e => stderrLn "Error \{e}"] run
 where
   run : Async Poll [Errno] ()
-  run = do
-  chan <- channel 1
-  race () [
-    countSeconds 10 chan,
-    stdin chan,
-    mainloop chan
-  ]
+  run = use1 rawMode $ \_ => do
+    chan <- channel 1
+    race () [
+      countSeconds 10 chan,
+      stdin chan,
+      guarantee (mainloop chan) (close chan >> mainloop chan)
+    ]
