@@ -51,5 +51,7 @@ where
       -- close chanel when the timer expires.
       -- mainloop is made uncancelable, so that all remaining events
       -- are guaranteed to be processed.
-      guarantee (mainloop chan) (close chan >> mainloop chan)
+      guarantee (mainloop chan) $ do
+        stdoutLn "Channel has closed, draining queue"
+        mainloop chan
     ]
