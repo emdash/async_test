@@ -48,5 +48,8 @@ where
     race () [
       countSeconds 10 chan,
       stdin chan,
+      -- close chanel when the timer expires.
+      -- mainloop is made uncancelable, so that all remaining events
+      -- are guaranteed to be processed.
       guarantee (mainloop chan) (close chan >> mainloop chan)
     ]
