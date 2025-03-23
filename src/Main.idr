@@ -18,7 +18,7 @@ import System.Posix.File
 countSeconds : Nat -> Channel String -> Async Poll es ()
 countSeconds 0 chan = do
   _ <- send chan "Timer Expired"
-  pure ()
+  close chan
 countSeconds (S k) chan = do
   Sent <- send chan "\{show $ S k} s left" | _ => pure ()
   sleep 1.s
@@ -28,7 +28,7 @@ covering
 stdin : Has Errno es => Channel String -> Async Poll es ()
 stdin chan = do
   bytes <- readnb Stdin ByteString 16
-  _ <- send chan $ show bytes
+  Sent <- send chan $ show bytes | _ => pure ()
   stdin chan
 
 covering
