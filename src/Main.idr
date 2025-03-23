@@ -47,7 +47,7 @@ where
   run = do
   chan <- channel 1
   race () [
-    countSeconds 30 chan,
+    countSeconds 10 chan,
     stdin chan,
     mainloop chan
   ]
