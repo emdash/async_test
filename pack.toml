@@ -1,0 +1,17 @@
+[custom.all.async_test]
+type = "local"
+path = "."
+ipkg = "async_test.ipkg"
+test = "test/test.ipkg"
+
+[custom.all.async_test-test]
+type = "local"
+path = "test"
+ipkg = "test.ipkg"
+
+
+[custom.all.async-posix]
+type = "github"
+url  = "https://github.com/stefan-hoeck/idris2-async"
+commit = "latest:main"
+ipkg = "async-posix/async-posix.ipkg"
